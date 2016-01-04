@@ -1,0 +1,6 @@
+#!/bin/bash
+bison -d src/parser.y
+flex src/scanner.l
+gcc -Wall -g -c src/lex.yy.c -o bin/lex.yy.o
+gcc -Wall -g -c src/parser.tab.c -o bin/parser.tab.o
+gcc -Wall -g bin/lex.yy.o bin/parser.tab.o -o bin/compiler
