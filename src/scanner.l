@@ -21,6 +21,53 @@ integer ("-"?[0-9]+)
 
 %%
 //scanning here
+
+
+//keywords:
+"auto"           { return AUTO; }
+"break"          { return BREAK; }
+"case"           { return CASE; }
+"const"          { return CONST; }
+"continue"       { return CONTINUE; }
+"default"        { return DEFAULT; }
+"double"         { return DOUBLE; }
+"do"             { return DO; }
+"else"           { return ELSE; }
+"enum"           { return ENUM; }
+"extern"         { return EXTERN; }
+"float"          { return FLOAT; }
+"for"            { return FOR; }
+"goto"           { return GOTO; }
+"if"             { return IF; }
+"inline"         { return INLINE; }
+"int"            { return INT; }
+"long"           { return LONG; }
+"register"       { return REGISTER; }
+"restrict"       { return RESTRICT; }
+"return"         { return RETURN; }
+"short"          { return SHORT; }
+"signed"         { return SIGNED; }
+"sizeof"         { return SIZEOF; }
+"static"         { return STATIC; }
+"struct"         { return STRUCT; }
+"switch"         { return SWITCH; }
+"typedef"        { return TYPEDEF; }
+"union"          { return UNION; }
+"unsigned"       { return UNSIGNED; }
+"void"           { return VOID; }
+"volatile"       { return VOLATILE; }
+"while"          { return WHILE; }
+"_Alignas"       { return _ALIGNAS; }
+"_Alignof"       { return _ALIGNOF; }
+"_Atomic"        { return _ATOMIC; }
+"_Bool"          { return _BOOL; }
+"_Complex"       { return _COMPLEX; }
+"_Generic"       { return _GENERIC; }
+"_Imaginary"     { return _IMAGINARY; }
+"_Noreturn"      { return _NORETURN; }
+"_Static_assert" { return _STATIC_ASSERT; }
+"_Thread_local"  { return _THREAD_LOCAL; }
+
 %%
  //C code here
 int main( int argc, char** argv )
