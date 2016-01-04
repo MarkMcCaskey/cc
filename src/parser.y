@@ -19,7 +19,7 @@
 
  //number tokens
 %token DEC_NUMBER HEX_NUMBER OCT_NUMBER FLOAT_NUMBER HEX_FLOAT_NUMBER
-%token CHAR OCT_DIGIT HEX_DIGIT
+%token CHAR SCHAR HCHAR QCHAR OCT_DIGIT HEX_DIGIT
 
  //other tokens
 
@@ -103,4 +103,28 @@ octal_escape_seq: "\\" OCT_DIGIT
 hexadecimal_escape_seq: "\\x" HEX_DIGIT
                       | hexadecimal_escape_seq HEX_DIGIT
 
+
+ //string literals:
+
+string_literal: encoding_prefix_o "\"" s_char_seq_o "\""
+
+encoding_prefix_o: encoding_prefix | 
+encoding_prefix: "u8" | "u" | "U" | "L"
+
+s_char_seq: s_char
+          | s_char_seq s_char
+
+s_char: SCHAR
+      | escape_seq
+
+ //header names:
+
+header_name: "<" h_char_seq ">"
+           | "\"" q_char_seq "\""
+
+h_char_seq: HCHAR
+          | h_char_seq HCHAR
+
+q_char_seq: QCHAR
+          | q_char_seq QCHAR
 %%

@@ -15,10 +15,14 @@ identifier ([a-zA-Z]|"_")(("_"|[a-zA-Z]|[0-9])*)
 hexdigit ([0-9]|[a-fA-F])
 octdigit ([0-7])
 
-//revise this later:
+//TODO: revise and test these.  They look like they're wrong
 character (\\.|[^\\'\n]) 
 //' ]) ignore this.  I need to fix my Emacs
-
+scharacter (\\.|[^\\"\n])
+//"]) ignore this too
+hcharacter ([^\n>])
+qcharacter ([^\n"])
+//"]) 
 
 %%
 //scanning here
@@ -32,6 +36,18 @@ character (\\.|[^\\'\n])
 (([0-9]*"."[0-9]+)|[0-9]+".")                { return FLOAT_NUMBER; }
 (({hexdigit}*"."{hexdigit}+)|{hexdigit}+".") { return HEX_FLOAT_NUMBER; }
 {character}                                  { return CHAR; }
+{scharacter}                                 { return SCHAR; }
+
+//punctuators:
+("<:"|"[")    { return OBRACKET; }
+(":>"|"]")    { return CBRACKET; }
+("<%"|"{")    { return OBRACE; }
+("%>"|"}")    { return CBRACE; }
+("%:%:"|"##") { return DOUBLE_HASH; }
+("%:"|"#")    { return SINGLE_HASH; }
+
+{hcharacter} { return HCHAR; }
+{qcharacter} { return QCHAR; }
 
 //keywords:
 "auto"           { return AUTO; }
