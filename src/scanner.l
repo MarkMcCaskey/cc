@@ -12,16 +12,26 @@
 
 //one or more alphanum or _ starting with a letter or _
 identifier ([a-zA-Z]|"_")(("_"|[a-zA-Z]|[0-9])*)
+hexdigit ([0-9]|[a-fA-F])
+octdigit ([0-7])
 
 //revise this later:
-//character (\\.|[^\\"])
+character (\\.|[^\\'\n]) 
+//' ]) ignore this.  I need to fix my Emacs
 
-//one or more numbers with an optional sign
-integer ("-"?[0-9]+)
 
 %%
 //scanning here
 
+//numbers
+{octdigit}                                   { return OCT_DIGIT; }
+{hexdigit}                                   { return HEX_DIGIT; }
+(0([0-7]+)                                   { return OCT_NUMBER; }
+(0("x"|"X"){hexdigit}+)                      { return HEX_NUMBER; }
+([1-9][0-9]*)                                { return DEC_NUMBER; }
+(([0-9]*"."[0-9]+)|[0-9]+".")                { return FLOAT_NUMBER; }
+(({hexdigit}*"."{hexdigit}+)|{hexdigit}+".") { return HEX_FLOAT_NUMBER; }
+{character}                                  { return CHAR; }
 
 //keywords:
 "auto"           { return AUTO; }
