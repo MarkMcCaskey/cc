@@ -28,13 +28,13 @@ qcharacter ([^\n"])
 //scanning here
 
 //numbers
-{octdigit}                                   { return OCT_DIGIT; }
-{hexdigit}                                   { return HEX_DIGIT; }
 (0([0-7]+)                                   { return OCT_NUMBER; }
 (0("x"|"X"){hexdigit}+)                      { return HEX_NUMBER; }
-([1-9][0-9]*)                                { return DEC_NUMBER; }
 (([0-9]*"."[0-9]+)|[0-9]+".")                { return FLOAT_NUMBER; }
 (({hexdigit}*"."{hexdigit}+)|{hexdigit}+".") { return HEX_FLOAT_NUMBER; }
+{octdigit}                                   { return OCT_DIGIT; }
+{hexdigit}                                   { return HEX_DIGIT; }
+([1-9][0-9]*)                                { return DEC_NUMBER; }
 {character}                                  { return CHAR; }
 {scharacter}                                 { return SCHAR; }
 

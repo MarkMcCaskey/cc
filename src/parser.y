@@ -22,6 +22,7 @@
 %token CHAR SCHAR HCHAR QCHAR OCT_DIGIT HEX_DIGIT
 
  //other tokens
+%token OBRACKET CBRACKET OBRACE CBRACE DOUBLE_HASH SINGLE_HASH
 
 %%
  //parsing goes here
@@ -91,7 +92,16 @@ c_char: CHAR | escape_seq
 escape_seq: simple_escape_seq
           | octal_escape_seq
           | hexadecimal_escape_seq
- //| universal_character_name?
+          | universal_character_name?
+
+ /*
+  * Universal_character_name:
+  * must be > 0x00A0 (excluding 0x0024, 0x0040, and 0x0060) and
+  * not in the range of 0xD800-0xDFFF
+  */
+universal_character_name: "\\u" hex_quad | "\\U" hex_quad hex_quad
+
+hex_quad: HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
 
 simple_escape_seq: "\\\'" | "\\\"" | "\\?" | "\\\\" | "\\a" | "\\b" | "\\f"
                  | "\\n" | "\\r" | "\\t" | "\\v"
@@ -127,4 +137,34 @@ h_char_seq: HCHAR
 
 q_char_seq: QCHAR
           | q_char_seq QCHAR
+
+token: keyword
+     | identifier
+     | constant
+     | string_literal
+     | punctuator
+
+ //review white space below:
+preprocessing_token: header_name
+                   | identifier
+                   | pp_number
+                   | character_constant
+                   | string_literal
+                   | punctuator
+                   | " "
+                   | "\t"
+                   | "\n"
+
+ //review if these should be explicitly checked in scanner
+punctuator: OBRACKET | CBRACKET | "(" | ")" | OBRACE | CBRACE | "."
+                     | "->" | "++" | "--" | "&" | "*" | "+" | "-"
+                     | "~" | "!" | "/" | "%" | "<<" | ">>" | "<" | ">"
+                     | "<=" | ">=" | "==" | "!=" | "^" | "|" | "&&" | "||"
+                     | "?" | ":" | ";" | "..." | "=" | "*=" | "/=" | "%=" |
+                     | "+=" | "-=" | "<<=" | ">>=" "&=" | "^=" | "|="
+                     | "," | SINGLE_HASH | DOUBLE_HASH
+
+
+
+
 %%
