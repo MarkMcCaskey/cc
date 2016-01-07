@@ -154,6 +154,8 @@ preprocessing_token: header_name
                    | " "
                    | "\t"
                    | "\n"
+                   | "\v"
+                   | "\r"
 
  //review if these should be explicitly checked in scanner
 punctuator: OBRACKET | CBRACKET | "(" | ")" | OBRACE | CBRACE | "."
@@ -164,6 +166,107 @@ punctuator: OBRACKET | CBRACKET | "(" | ")" | OBRACE | CBRACE | "."
                      | "+=" | "-=" | "<<=" | ">>=" "&=" | "^=" | "|="
                      | "," | SINGLE_HASH | DOUBLE_HASH
 
+ //this needs to be fixed
+pp_number: DEC_NUMBER
+         | "." DEC_NUMBER
+         | pp_number DEC_NUMBER
+         | pp_number identifier_nondigit
+         | pp_number "e" sign
+         | pp_number "E" sign
+         | pp_number "p" sign
+         | pp_number "P" sign
+         | pp_number "."
+
+
+
+ //expressions
+
+primary_expression: identifier
+                  | constant
+                  | string_literal
+                  | "(" expression ")"
+                  | generic_selection
+
+generic_selection:
+_GENERIC "(" assignment_expression "," generic_assoc_list ")"
+
+generic_assoc_list: generic_association
+                  | generic_assoc_list "," generic_association
+
+generic_association: type_name ":" assignment_expression
+                   | DEFAULT ":" assignment_expression
+
+
+ //punctuators need to be handled better
+postfix_expression: primary_expression
+                  | postfix_expression OBRACKET expression CBRACKET
+                  | postfix_expression "(" argument_expression_list_o ")"
+                  | postfix_expression "." identifier
+                  | postfix_expression "->" identifier
+                  | postfix_expression "++"
+                  | postfix_expression "--"
+                  | "(" type_name ")" OBRACE initializer_list CBRACE
+                  | "(" type_name ")" OBRACE initializer_list "," CBRACE
+
+argument_expression_list_o: argument_expression_list |
+argument_expression_list: assignment_expression
+                        | argument_expression_list "," assignment_expression
+
+
+unary_expression: postfix_expression
+                | "++" unary_expression
+                | "--" unary_expression
+                | unary_operator cast_expression
+                | SIZEOF unary_expression
+                | SIZEOF "(" type_name ")"
+                | _ALIGNOF "(" type_name ")"
+
+unary_operator: "&" | "*" | "+" | "-" | "~" | "!"
+
+
+cast_expression: unary_expression
+               | "(" type_name ")" cast_expression
+
+multplicative_expression: cast_expression
+                        | multiplicative_expression "*" cast_expression
+                        | multiplicative_expression "/" cast_expression
+                        | multiplicative_expression "%" cast_expression
+
+additive_expression: multiplicative_expression
+                   | additive_expression "+" multiplicative_expression
+                   | additive_expression "-" multiplicative_expression
+
+shift_expression: additive_expression
+                | shift_expression "<<" additive_expression
+                | shift_expression ">>" additive_expression
+
+relational_expression: shift_expression
+                     | relational_expression "<"  shift_expression
+                     | relational_expression ">"  shift_expression
+                     | relational_expression "<=" shift_expression
+                     | relational_expression ">=" shift_expression
+
+equality_expression: relational_expression
+                   | equality_expression "==" relational_expression
+                   | equality_expression "!=" relational_expression
+
+AND_expression: equality_expression
+              | AND_expression "&" equality_expression
+
+exclusive_OR_expression: AND_expression
+                       | exclusive_OR_expression "^" AND_expression
+
+inclusive_OR_expression: exclusive_OR_expression
+                       | inclusive_OR_expression "|" exclusive_OR_expression
+
+logical_AND_expression: inclusive_OR_expression
+                      | logical_AND_expression "&&" inclusive_OR_expression
+
+logical_OR_expression: logical_AND_expression
+                     | logical_OR_expression "||" logical_AND_expression
+
+conditional_expression: logical_OR_expression
+                      | logical_OR_expression "?" expression ":" conditional_expression
 
 
 
